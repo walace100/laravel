@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 
+use Illuminate\Http\Request;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -69,6 +71,62 @@ Route::view("/hello","hello");
 
 Route::view("/hellonome","hellonome", ["nome" => "Walace", "sobrenome" => "Paz"]);
 
-Route::get("/hellonome/{nome}/{sobrenome}", function ($nome, $sn){
+Route::get("/hellonome/{nome}/{sobrenome}", function($nome, $sn){
 	return view("hellonome", ["nome" => "Walace", "sobrenome" => "Paz"]);
+});
+
+Route::get("/rest/hello", function(){
+	return "Hello, {GET}";
+});
+
+Route::post("/rest/hello", function(){
+	return "Hello, {POST}";
+});
+
+Route::delete("/rest/hello", function(){
+	return "Hello, {DELETE}";
+});
+
+Route::put("/rest/hello", function(){
+	return "Hello, {PUT}";
+});
+
+Route::patch("/rest/hello", function(){
+	return "Hello, {PATCH}";
+});
+
+Route::options("/rest/hello", function(){
+	return "Hello, {OPTIONS}";
+});
+
+Route::post("/rest/imprimir", function(Request $req){ //não vai funcionar
+	$nome = $req->input("nome");
+	$idade = $req->input("idade");
+	return "Hello, $nome! {POST}";
+});
+
+Route::match(["get", "post"], "/rest/hello2", function(){
+	return "Hello World 2";
+});
+
+Route::any("/rest/hello3", function(){
+	return "Hello World 3";
+});
+
+Route::get("/produtos", function(){
+	echo "<h1>Produtos</h1>";
+	echo "<ul>";
+	echo "<li>Notebook</li>";
+	echo "<li>Impressora</li>";
+	echo "<li>Mouse</li>";
+	echo "</ul>";
+})->name("meusprodutos");
+
+Route::get("/linkprodutos", function(){
+	$url = route("meusprodutos");
+	echo "<a href=". $url .">meus produtos</a>";
+});
+
+Route::get("/redirecionarprodutos", function(){
+	return redirect()->route("meusprodutos");
 });
