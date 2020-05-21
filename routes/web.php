@@ -27,7 +27,7 @@ Route::get("/ola/sejabemvindo", function(){
 	return "<h1>Olá, seja bem vindo</h1>";
 });
 
-Route::get("/nome/{nome}/{sobrenome}", function($nome, $sn){
+Route::get("/nome1/{nome}/{sobrenome}", function($nome, $sn){
 	return "<h1>Olá, $nome $sn!</h1>";
 });
 
@@ -130,3 +130,18 @@ Route::get("/linkprodutos", function(){
 Route::get("/redirecionarprodutos", function(){
 	return redirect()->route("meusprodutos");
 });
+/**
+* Aula de Controladores
+*
+*/
+Route::get("/nome", "MeuControlador@getNome");
+
+Route::get("/idade", "MeuControlador@getIdade");
+
+Route::get("/multiplicar/{n1}/{n2}", "MeuControlador@multiplicar");
+
+Route::get("/nomes/{id}", "MeuControlador@getNomeById");
+
+Route::resource("/cliente", "ClienteControlador");
+
+Route::post("/cliente/requisitar", "ClienteControlador@requisitar");
