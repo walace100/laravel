@@ -6,6 +6,18 @@ use Illuminate\Http\Request;
 
 class ClienteControlador extends Controller
 {
+    private $clientes = [
+        ["id" => 1, "nome" => "ademir"],
+        ["id" => 2, "nome" => "joão"],
+        ["id" => 3, "nome" => "maria"],
+        ["id" => 4, "nome" => "aline"]
+    ];
+
+    public function __construct(){
+        $clientes = session("clientes");
+        if(isset($clientes))
+            session(["clientes" => $this->clientes]);
+    }
     /**
      * Display a listing of the resource.
      *
@@ -13,7 +25,8 @@ class ClienteControlador extends Controller
      */
     public function index()
     {
-        return "Lista de Todos os Clientes - Raiz";
+        $clientes = session("clientes");
+        return view("clientes.index", compact(["clientes"]));
     }
 
     /**
@@ -23,7 +36,7 @@ class ClienteControlador extends Controller
      */
     public function create()
     {
-        return "Formulário para cadastrar novo cliente";
+        return view("clientes.create");
     }
 
     /**
@@ -34,10 +47,13 @@ class ClienteControlador extends Controller
      */
     public function store(Request $request)
     {
-        $s = "armazemar: ";
-        $s .= "Nome: ". $request->input("nome")." e ";
-        $s .= "Idade: ". $request->input("idade"). " ";
-        return response($s, 201);
+        $clientes = session("clientes");
+        $id = count($clientes) + 1;
+        $nome = $request->nome;
+        $dados = ["id" => $id, "nome" => $nome];
+        $clientes[] = $dados;
+        session(["session" => $clientes]);
+        return redirect()->route("clientes.index");
     }
 
     /**

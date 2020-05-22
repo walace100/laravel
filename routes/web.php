@@ -19,11 +19,11 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get("/ola", function(){
+Route::get("/ola1", function(){
 	return "Olá";
 });
 
-Route::get("/ola/sejabemvindo", function(){
+Route::get("/ola2/sejabemvindo", function(){
 	return "<h1>Olá, seja bem vindo</h1>";
 });
 
@@ -72,7 +72,7 @@ Route::view("/hello","hello");
 Route::view("/hellonome","hellonome", ["nome" => "Walace", "sobrenome" => "Paz"]);
 
 Route::get("/hellonome/{nome}/{sobrenome}", function($nome, $sn){
-	return view("hellonome", ["nome" => "Walace", "sobrenome" => "Paz"]);
+	return view("hellonome", ["nome" => $nome, "sobrenome" => $sn]);
 });
 
 Route::get("/rest/hello", function(){
@@ -145,3 +145,35 @@ Route::get("/nomes/{id}", "MeuControlador@getNomeById");
 Route::resource("/cliente", "ClienteControlador");
 
 Route::post("/cliente/requisitar", "ClienteControlador@requisitar");
+/**
+* Aula de Views
+*
+*/
+Route::get("/primeiraview", function(){
+	return view("Minhaview");
+});
+
+Route::get("/ola", function(){
+	//return view("Minhaview")->with("nome", "Walace")->with("sobrenome", "Paz");
+});
+
+Route::get("/ola/{nome}/{sobrenome}", function($nome, $sobrenome){
+	//return view("Minhaview")->with("nome", $nome)->with("sobrenome", $sobrenome);
+	// $parametros = ["nome" => $nome, "sobrenome" => $sobrenome];
+	return view("Minhaview", compact("nome", "sobrenome"));
+});
+
+Route::get("/email/{email}", function($email){
+	if(View::exists("email"))
+		return view("email", compact("email"));
+	else
+		return view("erro");
+});
+
+Route::get("/filho", function(){
+	return view("filho");
+});
+
+Route::get("/pagina", function(){
+	return view("pagina");
+});
