@@ -113,7 +113,7 @@ Route::any("/rest/hello3", function(){
 	return "Hello World 3";
 });
 
-Route::get("/produtos", function(){
+Route::get("/produtos1", function(){
 	echo "<h1>Produtos</h1>";
 	echo "<ul>";
 	echo "<li>Notebook</li>";
@@ -177,3 +177,18 @@ Route::get("/filho", function(){
 Route::get("/pagina", function(){
 	return view("pagina");
 });
+/**
+* Aula de Views dia 2
+*
+*/
+Route::get("/produtos", "ProdutoControlador@listar");
+
+Route::get("/secaoprodutos/{palavra}", "ProdutoControlador@secaoprodutos");
+
+Route::get("/mostraropcoes", "ProdutoControlador@mostraropcoes");
+
+Route::get("/opcoes/{opcoes}", "ProdutoControlador@opcoes");
+
+route::get("/loop/for/{n}", "ProdutoControlador@loopfor");
+
+Route::get("loop/foreach", "ProdutoControlador@loopforeach");
