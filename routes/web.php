@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
 /*
@@ -192,3 +192,145 @@ Route::get("/opcoes/{opcoes}", "ProdutoControlador@opcoes");
 route::get("/loop/for/{n}", "ProdutoControlador@loopfor");
 
 Route::get("loop/foreach", "ProdutoControlador@loopforeach");
+/**
+* Aula de banco
+*
+*/
+Route::get("/categorias", function(){
+	$cats = DB::table("categorias")->get();
+	foreach($cats as $cat){
+		echo "id: $cat->id; ";
+		echo "nome: $cat->nome <br>";
+	}
+
+	echo "<hr>";
+	$nomes = DB::table("categorias")->pluck("nome");
+	foreach($nomes as $nome){
+		echo "$nome<br>";
+	}
+
+	echo "<hr>";
+	$cats = DB::table("categorias")->where("id", 1)->get();
+	echo "id: ".$cats[0]->id."; ";
+	echo "nome: ".$cats[0]->nome." <br>";
+
+	echo "<hr>";
+	$cats = DB::table("categorias")->where("id", 1)->get()->first();
+	echo "id: $cats->id; ";
+	echo "nome: $cats->nome <br>";
+	
+	echo "<hr>";
+	echo "<p>Retorna um array utilizando like</p>"; 
+	$cats = DB::table("categorias")->where("nome", "like", "p%")->get();
+	foreach($cats as $cat){
+		echo "id: $cat->id; ";
+		echo "nome: $cat->nome <br>";
+	}
+
+	echo "<hr>";
+	echo "<p>sentenças logicas</p>"; 
+	$cats = DB::table("categorias")->where("id", 1)->orWhere("id", 2)->get();
+	foreach($cats as $cat){
+		echo "id: $cat->id; ";
+		echo "nome: $cat->nome <br>";
+	}
+
+	echo "<hr>";
+	echo "<p>intervalos</p>"; 
+	$cats = DB::table("categorias")->whereBetween("id", [1, 2])->get();
+	foreach($cats as $cat){
+		echo "id: $cat->id; ";
+		echo "nome: $cat->nome <br>";
+	}
+
+	echo "<hr>";
+	echo "<p>intervalos negação</p>"; 
+	$cats = DB::table("categorias")->whereNotBetween("id", [1, 2])->get();
+	foreach($cats as $cat){
+		echo "id: $cat->id; ";
+		echo "nome: $cat->nome <br>";
+	}
+
+	echo "<hr>";
+	echo "<p>conjuntos</p>"; 
+	$cats = DB::table("categorias")->whereIn("id", [1, 3, 4])->get();
+	foreach($cats as $cat){
+		echo "id: $cat->id; ";
+		echo "nome: $cat->nome <br>";
+	}
+
+	echo "<hr>";
+	echo "<p>conjuntos negação</p>"; 
+	$cats = DB::table("categorias")->whereNotIn("id", [1, 3, 4])->get();
+	foreach($cats as $cat){
+		echo "id: $cat->id; ";
+		echo "nome: $cat->nome <br>";
+	}
+
+	echo "<hr>";
+	echo "<p>sentenças logicas</p>"; 
+	$cats = DB::table("categorias")->where([
+		["id", 1],
+		["nome", "roupas"]
+	])->get();
+	foreach($cats as $cat){
+		echo "id: $cat->id; ";
+		echo "nome: $cat->nome <br>";
+	}
+
+	echo "<hr>";
+	echo "<p>ordernando por nome</p>"; 
+	$cats = DB::table("categorias")->orderBy("nome")->get();
+	foreach($cats as $cat){
+		echo "id: $cat->id; ";
+		echo "nome: $cat->nome <br>";
+	}
+
+	echo "<hr>";
+	echo "<p>ordernando por nome (decrescente)</p>"; 
+	$cats = DB::table("categorias")->orderBy("nome", "desc")->get();
+	foreach($cats as $cat){
+		echo "id: $cat->id; ";
+		echo "nome: $cat->nome <br>";
+	}
+});
+
+Route::get("/novascategorias", function(){
+	DB::table("categorias")->insertGetId(
+		["nome" => "Carros"]
+	);
+});
+
+Route::get("/atualizandocategorias", function(){
+
+	echo "<p>Antes da atualização</p>";
+	$cats = DB::table("categorias")->where("id", 1)->first();
+	echo "id: $cats->id; ";
+	echo "nome: $cats->nome <br>";
+	$cats = DB::table("categorias")->where("id", 1)->update([
+		"nome" => "Roupas infantis"
+	]);
+	$cats = DB::table("categorias")->where("id", 1)->first();
+	echo "<p>Depois da atualização</p>";
+	echo "id: $cats->id; ";
+	echo "nome: $cats->nome <br>";
+});
+
+Route::get("/removendocategorias", function(){
+
+	echo "<p>ANTES da remoção</p>";
+	$cats = DB::table("categorias")->get();
+	foreach($cats as $cat){
+		echo "id: $cat->id; ";
+		echo "nome: $cat->nome <br>";
+	}
+	echo "<hr>";
+	DB::table("categorias")->where("id", 6)->delete();
+
+	echo "<p>DEPOIS da remoção</p>";
+	$cats = DB::table("categorias")->get();
+	foreach($cats as $cat){
+		echo "id: $cat->id; ";
+		echo "nome: $cat->nome <br>";
+	}
+});
