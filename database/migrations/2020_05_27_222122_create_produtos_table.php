@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AdicionarCategoriaIdEmProduto extends Migration
+class CreateProdutosTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,14 @@ class AdicionarCategoriaIdEmProduto extends Migration
      */
     public function up()
     {
-        Schema::table('produtos', function (Blueprint $table) {
-            $table->integer("categoria_id")->unsigned();
+        Schema::create('produtos', function (Blueprint $table) {
+            $table->id();
+            $table->string("nome");
+            $table->float("preco");
+            $table->integer("estoque");
+            $table->bigInteger("categoria_id")->unsigned();
             $table->foreign("categoria_id")->references("id")->on("categorias");
+            $table->timestamps();
         });
     }
 
@@ -26,9 +31,6 @@ class AdicionarCategoriaIdEmProduto extends Migration
      */
     public function down()
     {
-        Schema::table('produtos', function (Blueprint $table) {
-            $table->dropForeign(["categoria_id"]);
-            $table->dropColumn(["categoria_id"]);
-        });
+        Schema::dropIfExists('produtos');
     }
 }

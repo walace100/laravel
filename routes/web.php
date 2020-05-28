@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use App\Categoria;
 
 /*
 |--------------------------------------------------------------------------
@@ -332,5 +333,127 @@ Route::get("/removendocategorias", function(){
 	foreach($cats as $cat){
 		echo "id: $cat->id; ";
 		echo "nome: $cat->nome <br>";
+	}
+});
+/**
+* Aula de model
+*
+*/
+Route::get("/insert/{nome}", function($nome){
+	$cat = new Categoria();
+	$cat->nome = $nome;
+	$cat->save();
+	return redirect("/select");
+});
+
+Route::get("/select", function(){
+	$categorias = Categoria::all();
+	foreach($categorias as $c){
+		echo "id: $c->id , nome: $c->nome <br>";
+	}
+});
+
+Route::get("/categoria/{id}", function($id){
+	$cat = Categoria::findOrFail($id); # ::find
+	echo "id: $cat->id , nome: $cat->nome <br>";
+	
+});
+
+Route::get("/atualizar/{id}/{nome}", function($id, $nome){
+	$cat = Categoria::find($id);
+	if(isset($cat)){
+		$cat->nome = $nome;
+		$cat->save();
+		return redirect("/select");
+	} else {
+		echo "<h1>Categoria não encontrado</h1>";
+	}
+});
+
+Route::get("/remover/{id}", function($id){
+	$cat = Categoria::find($id);
+	if(isset($cat)){
+		$cat->delete();
+		return redirect("/select");
+	} else {
+		echo "<h1>Categoria não encontrado</h1>";
+	}
+});
+
+Route::get("/categoriapornome/{nome}", function($nome){
+	$categorias = Categoria::where("nome", $nome)->get();
+	foreach($categorias as $c){
+		echo "id: $c->id , nome: $c->nome <br>";
+	}
+});
+
+Route::get("/categoriaidmaiorque/{id}", function($id){
+	$categorias = Categoria::where("id", ">=", $id)->get();
+	foreach($categorias as $c){
+		echo "id: $c->id , nome: $c->nome <br>";
+	}
+	$count = Categoria::where("id", ">=", $id)->count();
+	echo "<h1>Count: $count</h1>";
+	$max = Categoria::where("id", ">=", $id)->max("id");
+	echo "<h1>Count: $max</h1>";
+});
+
+Route::get("/ids123", function(){
+	$categorias = Categoria::find([1, 2, 3]);
+	foreach($categorias as $c){
+		echo "id: $c->id , nome: $c->nome <br>";
+	}
+});
+
+Route::get("/todas", function(){
+	$categorias = Categoria::withTrashed()->get();
+	foreach($categorias as $c){
+		echo "id: $c->id , nome: $c->nome ";
+		if($c->trashed())
+			echo "(apagado)<br>";
+		else 
+			echo "<br>";
+	}
+});
+
+Route::get("/ver/{id}", function($id){
+	#$cat = Categoria::withTrashed()->find($id); 
+	$cat = Categoria::where("id", $id)->get()->first();
+	if(isset($cat)){
+		echo "id: $cat->id , nome: $cat->nome <br>";
+	} else {
+		echo "<h1>Categoria não encontrado</h1>";
+	}
+});
+
+Route::get("/apagadas", function(){
+	$categorias = Categoria::onlyTrashed()->get();
+	foreach($categorias as $c){
+		echo "id: $c->id , nome: $c->nome ";
+		if($c->trashed())
+			echo "(apagado)<br>";
+		else 
+			echo "<br>";
+	}
+});
+
+Route::get("/restaurar/{id}", function($id){
+	$cat = Categoria::withTrashed()->find($id); 
+	if(isset($cat)){
+		$cat->restore();
+		echo "Categoria restaurada: $cat->id , nome: $cat->nome <br>";
+		echo "<a href='../select'>Listar todas </a>";
+	} else {
+		echo "<h1>Categoria não encontrado</h1>";
+	}
+});
+
+Route::get("/apagarpermanentemente/{id}", function($id){
+	$cat = Categoria::withTrashed()->find($id); 
+	if(isset($cat)){
+		$cat->forceDelete();
+		return redirect("/todas");
+	} else {
+		echo "<h1>Categoria não encontrado</h1>";
 	}
 });
