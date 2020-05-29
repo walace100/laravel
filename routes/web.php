@@ -470,3 +470,13 @@ Route::get("/ex1", function(){
 Route::get("/ex1/produtos", "ControladorProduto@index");
 
 Route::get("/ex1/categorias", "ControladorCategoria@index");
+
+Route::post("/ex1/categorias", "ControladorCategoria@store");
+
+Route::get("/ex1/categorias/novo", "ControladorCategoria@create");
+
+Route::get("/ex1/categorias/apagar/{id}", "ControladorCategoria@destroy");
+
+Route::get("/ex1/categorias/editar/{id}", "ControladorCategoria@edit");
+
+Route::post("/ex1/categorias/{id}", "ControladorCategoria@update");
