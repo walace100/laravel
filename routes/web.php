@@ -457,3 +457,16 @@ Route::get("/apagarpermanentemente/{id}", function($id){
 		echo "<h1>Categoria não encontrado</h1>";
 	}
 });
+
+/**
+* Aula prática
+*
+*/
+
+Route::get("/ex1", function(){
+	return view("index");
+});
+
+Route::get("/ex1/produtos", "ControladorProduto@index");
+
+Route::get("/ex1/categorias", "ControladorCategoria@index");
