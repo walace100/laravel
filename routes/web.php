@@ -480,3 +480,14 @@ Route::get("/ex1/categorias/apagar/{id}", "ControladorCategoria@destroy");
 Route::get("/ex1/categorias/editar/{id}", "ControladorCategoria@edit");
 
 Route::post("/ex1/categorias/{id}", "ControladorCategoria@update");
+
+/**
+* Aula de validação de formulário
+*
+*/
+
+Route::get("/form", "ClienteControlador2@index");
+
+Route::get("/form/novocliente", "ClienteControlador2@create");
+
+Route::post("/form/cliente", "ClienteControlador2@store");
