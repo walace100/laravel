@@ -467,7 +467,7 @@ Route::get("/ex1", function(){
 	return view("index");
 });
 
-Route::get("/ex1/produtos", "ControladorProduto@index");
+Route::get("/ex1/produtos", "ControladorProduto@indexView");
 
 Route::get("/ex1/categorias", "ControladorCategoria@index");
 

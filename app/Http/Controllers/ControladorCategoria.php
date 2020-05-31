@@ -97,4 +97,10 @@ class ControladorCategoria extends Controller
             $cat->delete();
         return redirect("/ex1/categorias");
     }
+
+    public function indexJson()
+    {
+        $cats = Categoria::all();
+        return json_encode($cats);
+    }
 }
