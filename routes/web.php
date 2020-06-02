@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Categoria;
+use App\Cliente2;
+use App\Endereco;
 
 /*
 |--------------------------------------------------------------------------
@@ -491,3 +493,82 @@ Route::get("/form", "ClienteControlador2@index");
 Route::get("/form/novocliente", "ClienteControlador2@create");
 
 Route::post("/form/cliente", "ClienteControlador2@store");
+
+/**
+* Aula de relacionamento 1 pra 1
+*
+*/
+
+Route::get("/clientes", function(){
+	$clientes = Cliente2::all();
+	foreach($clientes as $c){
+		echo "<p>ID: $c->id </p>";
+		echo "<p>Nome: $c->nome </p>";
+		echo "<p>Telefone: $c->telefone </p>";
+		#$e = Endereco::where("cliente_id", $c->id)->first();
+		echo "<p>rua: ".$c->endereco->rua." </p>";
+		echo "<p>numero:". $c->endereco->numero." </p>";
+		echo "<p>bairro:". $c->endereco->bairro." </p>";
+		echo "<p>cidade:". $c->endereco->cidade." </p>";
+		echo "<p>uf:". $c->endereco->uf." </p>";
+		echo "<p>cep:". $c->endereco->cep." </p>";
+		echo "<hr>";
+	}
+});
+
+Route::get("/enderecos", function(){
+	$end = Endereco::all();
+	foreach($end as $e){
+		echo "<p>ID: $e->cliente2_id </p>";
+		echo "<p>Nome:". $e->cliente->nome." </p>";
+		echo "<p>Telefone:". $e->cliente->telefone."</p>";
+		echo "<p>rua: $e->rua </p>";
+		echo "<p>numero: $e->numero </p>";
+		echo "<p>bairro: $e->bairro </p>";
+		echo "<p>cidade: $e->cidade </p>";
+		echo "<p>uf: $e->uf </p>";
+		echo "<p>cep: $e->cep </p>";
+		echo "<hr>";
+	}
+});
+
+Route::get("/inserir", function(){
+	$c = new Cliente2();
+	$c->nome = "Walace Paz";
+	$c->telefone = "21 973039039";
+	$c->save();
+	$e = new Endereco();
+	$e->rua = "Rua Senhora";
+	$e->numero = 401;
+	$e->bairro = "Campo Grande";
+	$e->cidade = "Rio de Janeiro";
+	$e->uf = "RJ";
+	$e->cep = "23085-550";
+	#$e->cliente2_id = $c->id;
+	$c->endereco()->save($e);
+
+	$c = new Cliente2();
+	$c->nome = "Walace Paz2";
+	$c->telefone = "21 973039039";
+	$c->save();
+	$e = new Endereco();
+	$e->rua = "Rua Florianopolis";
+	$e->numero = 401;
+	$e->bairro = "Praça Seca";
+	$e->cidade = "Rio de Janeiro";
+	$e->uf = "RJ";
+	$e->cep = "23085-550";
+	$c->endereco()->save($e);
+});
+
+Route::get("/clientes/json", function(){
+	#$clientes = Cliente2::all();
+	$clientes = Cliente2::with(["endereco"])->get();
+	return $clientes->toJson();
+});
+
+Route::get("/enderecos/json", function(){
+	#$enderecos = Endereco::all();
+	$enderecos = Endereco::with(["cliente"])->get();
+	return $enderecos->toJson();
+});
