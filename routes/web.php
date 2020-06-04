@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Categoria;
 use App\Cliente2;
 use App\Endereco;
+use App\Categoria2;
+use App\Produto2;
 
 /*
 |--------------------------------------------------------------------------
@@ -571,4 +573,103 @@ Route::get("/enderecos/json", function(){
 	#$enderecos = Endereco::all();
 	$enderecos = Endereco::with(["cliente"])->get();
 	return $enderecos->toJson();
+});
+
+/**
+* Aula de relacionamento 1 pra muitos
+*
+*/
+
+Route::get("a/categorias", function(){
+	$cat = Categoria2::all();
+	if(count($cat) === 0){
+		echo "<h4>Você não possui nenhuma categoria cadastrada </h4>";
+	} else {
+		foreach($cat as $c){
+			echo "<p>$c->id - $c->nome</p>";
+		}
+	}
+});
+
+Route::get("a/produtos", function(){
+	$prod = Produto2::all();
+	if(count($prod) === 0){
+		echo "<h4>Você não possui nenhum produto cadastrado </h4>";
+	} else {
+		echo "<table border='1'>";
+		echo "<thead>";
+		echo "<tr> <td> Nome";
+		echo "<td> Estoque";
+		echo "<td> preco";
+		echo "<td> categoria";
+		echo "</thead>";
+		echo "<tbody>";
+		foreach($prod as $p){
+			echo "<tr>";
+			echo "<td>$p->nome</td>";
+			echo "<td>$p->estoque</td>";
+			echo "<td>$p->preco</td>";
+			echo "<td>". $p->categoria->nome ."</td>";
+		}
+		echo "</tbody>";
+		echo "</table>";
+	}
+});
+
+Route::get("a/categoriasprodutos", function(){
+	$cat = Categoria2::all();
+	if(count($cat) === 0){
+		echo "<h4>Você não possui nenhuma categoria cadastrada </h4>";
+	} else {
+		foreach($cat as $c){
+			echo "<p>$c->id - $c->nome</p>";
+			$produtos = $c->produtos;
+			if(count($produtos) > 0){
+				echo "<ul>";
+				foreach($produtos as $p){
+					echo "<li> $p->nome </li>";
+				}
+				echo "</ul>";
+			}
+		}
+	}
+});
+
+Route::get("a/categoriasprodutos/json", function(){
+	$cats = Categoria2::with("produtos")->get();
+	return $cats->toJson();
+});
+
+Route::get("a/adicionarproduto", function(){
+	$cat = Categoria2::find(1);
+	$p = new Produto2();
+	$p->nome = "Meu novo produto";
+	$p->estoque = 10;
+	$p->preco = 100;
+	$p->categoria()->associate($cat);
+	$p->save();
+	return $p->toJson();
+});
+
+Route::get("a/removerprodutocategoria", function(){
+	$p = Produto2::find(10);
+	if(isset($p)){
+		$p->categoria()->dissociate();
+		$p->save();
+		return $p->toJson();
+	}
+	return "";
+});
+
+Route::get("a/adicionarproduto/{catid}", function($catid){
+	$cat = Categoria2::with("produtos")->find($catid);
+	$p = new Produto2();
+	$p->nome = "Meu novo produto adicionado";
+	$p->estoque = 10;
+	$p->preco = 500;
+	if(isset($cat)){
+		$cat->produtos()->save($p);
+	}
+	$cat->load("produtos");
+	return $cat->toJson();
 });
