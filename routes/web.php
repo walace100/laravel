@@ -11,6 +11,7 @@ use App\Produto2;
 use App\Projeto;
 use App\Desenvolvedor;
 use App\Alocacao;
+use App\Http\Middleware\PrimeiroMiddleware;
 
 /*
 |--------------------------------------------------------------------------
@@ -738,4 +739,59 @@ Route::get("b/desalocar", function(){
 	if(isset($proj)){
 		$proj->desenvolvedores()->detach([1, 2, 3]);
 	}
+});
+
+/**
+* Aula de middlewares
+*
+*/
+
+Route::prefix("c")->group(function(){
+
+	Route::get("/usuarios", "UsuariosControlador@index")->middleware("primeiro", "segundo");
+
+	Route::get("/", function(){
+		return "teste";
+	});
+
+	Route::get("/terceiro", function(){
+		return "passou pelo terceiro middleware";
+	})->middleware("terceiro:walace,17");
+
+	Route::get("/produtos", "SegProdutoControlador@index");
+
+	Route::get("/entrar", "SegProdutoControlador@entrar");
+
+	Route::get("/negado", function(){
+		return "Acesso Negado";
+	})->name("negado");
+
+	Route::post("/login", function(Request $req){
+		switch($req->input("user")){
+			case "joao":
+				$login_ok = $req->input("user") === "senhajoao";
+				$admin = false;
+			break;
+			case "walace":
+				$login_ok = $req->input("password") === "walace";
+				$admin = true;
+			break;
+			default:
+				$login_ok = false;
+		}
+		if($login_ok){
+			$login = ["user" => $req->input("user"), "admin" => $admin];
+			$req->session()->put("login", $login);
+			return response("Login ok", 200);
+		} else {
+			$req->session()->flush();
+			return response("Erro no login", 404);
+		}
+	})->middleware(\App\Http\Middleware\ProdutoAdmin::class);
+
+	Route::get("/logout", function(Request $request){
+		$request->session()->flush();
+		return response("deslogado com sucesso", 200);
+	});
+
 });
