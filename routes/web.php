@@ -795,3 +795,20 @@ Route::prefix("c")->group(function(){
 	});
 
 });
+
+/**
+* Aula de login
+*
+*/
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
+
+Route::get("d/produtos", "TerProdutoControlador@index");
+
+Route::get("d/departamentos", "DepartamentoControlador@index");
+
+Route::get("/d/usuario", function(){
+	return view("usuario");
+});
