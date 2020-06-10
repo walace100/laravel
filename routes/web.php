@@ -820,7 +820,7 @@ Route::get("/d/usuario", function(){
 
 Route::prefix("e")->group(function(){
 	
-	Route::get("/admin", "AdminController@index")->name("admindashboard");
+	Route::get("/admin", "AdminController@index")->name("admin.dashboard");
 
 	Route::get("/admin/login", "Auth\AdminLoginController@index")->name("admin.login");
 

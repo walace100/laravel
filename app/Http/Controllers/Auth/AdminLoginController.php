@@ -15,20 +15,19 @@ class AdminLoginController extends Controller
     
     public function Login(Request $request)
     {
-        $this->validade($request, [
-            $this->username() => 'required|string',
+        $this->validate($request, [
+            'email' => 'required|string',
             'password' => 'required|string',
         ]);
 
         $credentials = [
             'email' => $request->email,
-            'password' => $request->passoword
+            'password' => $request->password,
         ]; 
 
-        $authOk = Auth::guard('admin')->attempt($credentials, $request->remember);
-
+        $authOk = Auth::guard('admin')->attempt($credentials, $request->remember);#
         if($authOk){
-            return redirect()->intended(route('admindashboard'));
+            return redirect()->intended(route('admin.dashboard'));
         }
         return redirect()->back()->withInputs($request->only('email', 'remember'));
     }
