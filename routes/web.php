@@ -812,3 +812,18 @@ Route::get("d/departamentos", "DepartamentoControlador@index");
 Route::get("/d/usuario", function(){
 	return view("usuario");
 });
+
+/**
+* Aula de login multiusuario
+*
+*/
+
+Route::prefix("e")->group(function(){
+	
+	Route::get("/admin", "AdminController@index")->name("admindashboard");
+
+	Route::get("/admin/login", "Auth\AdminLoginController@index")->name("admin.login");
+
+	Route::post("/admin/login", "Auth\AdminLoginController@login")->name("admin.login.submit");
+
+});
