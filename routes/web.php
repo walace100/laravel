@@ -827,3 +827,18 @@ Route::prefix("e")->group(function(){
 	Route::post("/admin/login", "Auth\AdminLoginController@login")->name("admin.login.submit");
 
 });
+
+/**
+* Aula de paginação
+*
+*/
+
+Route::prefix("f")->group(function(){
+	
+	Route::get("/", "TerClienteControlador@index");
+
+	Route::get("/js", "TerClienteControlador@indexJs");
+
+	Route::get("/json", "TerClienteControlador@indexJson");
+
+});
