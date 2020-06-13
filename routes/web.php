@@ -842,3 +842,20 @@ Route::prefix("f")->group(function(){
 	Route::get("/json", "TerClienteControlador@indexJson");
 
 });
+
+/**
+* Aula pratica 2
+*
+*/
+
+Route::prefix("g")->group(function(){
+
+	Route::get("/", "PostControlador@index");
+
+	Route::post("/", "PostControlador@store");
+
+	Route::delete("/{id}", "PostControlador@destroy");
+
+	Route::get("/download/{id}", "PostControlador@download");
+
+});
