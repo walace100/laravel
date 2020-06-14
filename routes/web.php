@@ -859,3 +859,16 @@ Route::prefix("g")->group(function(){
 	Route::get("/download/{id}", "PostControlador@download");
 
 });
+
+/**
+* Aula angular 
+*
+*/
+
+Route::prefix("h")->group(function(){
+
+	Route::get("/", function(){
+		return view("index4");
+	});
+
+});
