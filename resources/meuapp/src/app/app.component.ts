@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Post } from './post';
 import { MatDialog } from '@angular/material/dialog';
 import { PostDialogComponent } from './post-dialog/post-dialog.component';
+import { PostService } from './post.service';
 
 @Component({
     selector: 'app-root',
@@ -10,21 +11,13 @@ import { PostDialogComponent } from './post-dialog/post-dialog.component';
 })
 export class AppComponent {
     title = 'meuapp';
-    public posts: Post[] = [
-        new Post("Joao" , "Meu Post" ,"sub joao", "joao@gmail.com", "minha msg do joao"),
-        new Post("Walace" , "Post do Walace" ,"sub Walace", "walace@gmail.com", "msg do Walace"),
-        new Post("Maria" , "Post da Maria" ,"sub Maria", "maria@gmail.com", "msg da Maria"),
-        new Post("Joao" , "Meu Post" ,"sub joao", "joao@gmail.com", "minha msg do joao"),
-        new Post("Walace" , "Post do Walace" ,"sub Walace", "walace@gmail.com", "msg do Walace"),
-        new Post("Maria" , "Post da Maria" ,"sub Maria", "maria@gmail.com", "msg da Maria"),
-        new Post("Joao" , "Meu Post" ,"sub joao", "joao@gmail.com", "minha msg do joao"),
-        new Post("Walace" , "Post do Walace" ,"sub Walace", "walace@gmail.com", "msg do Walace"),
-        new Post("Joao" , "Meu Post" ,"sub joao", "joao@gmail.com", "minha msg do joao"),
-        new Post("Walace" , "Post do Walace" ,"sub Walace", "walace@gmail.com", "msg do Walace"),
-        new Post("Walace" , "Post do Walace" ,"sub Walace", "walace@gmail.com", "msg do Walace"),
-    ]
+    public posts: Post[]
 
-    constructor(public dialog: MatDialog){}
+    constructor(public dialog: MatDialog, public postService: PostService){}
+
+    ngOnInit() {
+        this.posts = this.postService.posts
+    }
 
     openDialog() {
         const dialogRef = this.dialog.open(PostDialogComponent, {
@@ -32,7 +25,7 @@ export class AppComponent {
         })
         dialogRef.afterClosed().subscribe(result => {
             if(result)
-                console.log(result)
+                this.postService.salvar(result.post, result.arquivo)
         })
     }
 }

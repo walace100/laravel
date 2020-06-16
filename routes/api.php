@@ -21,3 +21,11 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::get("/ex1/categorias", "ControladorCategoria@indexJson");
 
 Route::resource("/ex1/produtos", "ControladorProduto");
+
+Route::get("/", "SegPostControlador@index");
+
+Route::post("/", "SegPostControlador@store");
+
+Route::delete("/{id}", "SegPostControlador@destroy");
+
+Route::get("/like/{id}", "SegPostControlador@like");
