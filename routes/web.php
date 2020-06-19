@@ -872,3 +872,9 @@ Route::prefix("h")->group(function(){
 	});
 
 });
+
+Route::prefix("i")->group(function(){
+
+	Route::get("/","QuaProdutoControlador@index");
+
+});
