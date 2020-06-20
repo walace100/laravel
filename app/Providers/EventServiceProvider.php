@@ -25,6 +25,9 @@ class EventServiceProvider extends ServiceProvider
         'Illuminate\Auth\Events\Login' => [
             'App\Listeners\LoginListener'
         ],
+        'App\Events\EventNovoRegistro' => [
+            "App\Listeners\ListenerConfirmacaoEmail",
+        ],
     ];
 
     /**
